@@ -6,14 +6,11 @@
 ### Node Project folder structure
 
 
-```ditaa {cmd=true args=["-E"]}
+```
 project
-    |
-    +--- src
-    |
+    |--- 📁 src
+    |--- 📁 node_modules
     +--- package.json
-    |
-    +--- node_modules
 ```
 
 ### Install packages
