@@ -1,75 +1,64 @@
-import {sleep,printAnswer, printLog, printQuestion} from './helper.mjs'
-
+import { sleep, challenges, printLog } from '../helper.js'
 
 ////////////////////////////////////////////////////////////////
 // Multiple Promise Example
 
-const orderAsync = async (number=0) => {
-    await sleep(3000)
-    console.log( timestamp() + `ordered ${number}`)
+const orderAsync = async (orderNumber = 0) => {
+    await sleep(1000)
+    printLog(`ordered ${orderNumber}`)
 }
 
-const pickAsync = async (number=0) => {
-    await sleep(3000)
-    console.log( timestamp() + `picked ${number}`)
+const pickAsync = async (item = 0) => {
+    await sleep(1000)
+    printLog(`picked ${item}`)
 }
 
-const packingAsync = async (number=0) => {
-    await sleep(3000)
-    console.log( timestamp() + `packaged ${number}`)
-    return "packaged"
+const packingAsync = async (item = 0) => {
+    await sleep(1000)
+    printLog(`packaged ${item}`)
 }
 
-const shipingAsync = async (number=0) => {
-    await sleep(3000)
-    console.log(timestamp()+`shipped ${number}`)
-    return "shipped"
+const shipingAsync = async (orderNumber = 0) => {
+    await sleep(1000)
+    printLog(`shipped ${orderNumber}`)
 }
 
-const orderOldStyle = async () => {
+// old style calling promise. this is still handy when calling promise from sync function
+challenges.orderOld = () => {
     orderAsync()
         .then(() => pickAsync())
         .then(() => packingAsync())
         .then(() => shipingAsync())
-        .then(x => console.log(x))
+        .then(x => printLog('done'))
 }
 
-const order = async (number=0) => {
-    await orderAsync(number)
-    await pickAsync(number)
-    await packingAsync(number)
-    await shipingAsync(number)
+// async/await syntax to call promise
+challenges.orderNew = async () => {
+    await orderAsync()
+    await pickAsync()
+    await packingAsync()
+    await shipingAsync()
 }
 
+// Challenge : implement order with following scenario
+// all items from same order must be picked and packaged before shipping..
+// item must picked before packaged.
+// items can be independently picked and packaged.
+// there is extra 1000ms delay in the order when ordering items more than 2
+challenges.order1 = async () => {
+    const order = async (orderNumber, items) => {
+        throw Error("not implemented")
+    }
 
-const orderAll = async (number) => {
-    Promise.all(
+    await Promise.all(
         [
-            order(1),
-            order(2),
-            order(3),
-            order(4),
+            order(1, [0, 1, 2, 3, 4]),
+            order(2, [10, 11]),
         ]
     )
 }
 
-// comparison between calling async function
-const helloDemo10 = async () => {
 
-    // no wait.
-    printAnswer(1, helloAsync(1))
 
-    // await promise to get result
-    let hello = await helloAsync(2, "call hello (wait)")
-    printAnswer(2, hello)
-
-    // old method 
-    helloAsync(3, "call hello (wait, old)").then(hello => printAnswer(3, hello))
-    console.log("I'm done")
-}
-
-global['helloDemo10'] = helloDemo10
-
-//orderAll()
 
 

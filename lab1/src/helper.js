@@ -6,10 +6,7 @@ const start = new Date()
 
 export const sleep = ms => new Promise(r => setTimeout(r, ms));
 const timestamp = () => `${(new Date() - start).toLocaleString()}: `
-
-export const printQuestion = (number, message = "call hello") => console.log(chalk.white(`(${number}):${timestamp()} ${message}`))
-export const printAnswer = (number, answer) => console.log(chalk.yellow(`(${number}):${timestamp()} answer => ${answer}`))
-export const printLog = (number, message) => console.log(chalk.green(`(${number}):${timestamp()} ${message}`))
+export const printLog = (message, color='white') => console.log(chalk[color](`${timestamp()} ${message}`))
 
 export const challenges = {}
 
