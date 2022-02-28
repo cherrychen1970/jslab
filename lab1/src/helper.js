@@ -11,17 +11,22 @@ export const printQuestion = (number, message = "call hello") => console.log(cha
 export const printAnswer = (number, answer) => console.log(chalk.yellow(`(${number}):${timestamp()} answer => ${answer}`))
 export const printLog = (number, message) => console.log(chalk.green(`(${number}):${timestamp()} ${message}`))
 
-export const challenges = []
-challenges.forEach(x => console.log(x))
+export const challenges = {}
 
 export const runChallenge = () => {
     const args = process.argv.slice(2)
     //const num = parseInt(args[0])
     //let challenge = challenges[`challenge${num}`]
     let challenge = challenges[args[0]]
+    let params = args.slice(1)
 
     if (challenge)
-        challenge()
+        try {
+            challenge(...params)
+        } catch (error) {
+            console.log( `${args[0]}: ${error.toString()}`)
+        }
+        
     else {
         console.log("Select challenge:")
         Object.keys(challenges).forEach(x=> console.log(x))        

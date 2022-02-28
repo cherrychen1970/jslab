@@ -14,16 +14,17 @@ project
 ```
 
 ### Install packages
-This will create ==node_modules== folder and install all packages.
+This will create __📁 node_modules__ and install all packages from __package.json__.
 
 ```
-$ npm install
+lab1$> npm install
 ```
 
+### Run Challenge
 
-### Run hello.js script
+There are some examples and challenges. once you implement challenge, you can run challenge using following example.
 ```
-$ node src/hello.js
+lab1$> node src/index.js $challenge $arg1 $arg2 ...
 ```
 
 ### Challenge Topics
@@ -36,30 +37,43 @@ $ node src/hello.js
 
 #### Import Module
 
+- how to import functions
 ```javascript
 // import export default function, you can name default function freely.
 // you can export only one default function from a module.
 // default function name is commonly same as module name.
-import moduleA from 'moduleA'
+import moduleA from './moduleA'
 
 // import exported functions
-import {funcA,funcB, funcC} from 'moduleA'
+import {funcA,funcB, funcC} from './moduleA'
 
 // use alias function name
-import {funcA as fa,funcB, funcC} from 'moduleA'
+import {funcA as fa,funcB, funcC} from './moduleA'
 
 // import all exported functions with namespace. 
 // call function => ma.funcA
-import * as ma from 'moduleA'
+import * as ma from './moduleA'
 
 // import with index file
-import ... from 'package'
+import ... from './package'
 
 ```
+- how to export functions
+```js
+//package/moduleA.js
+export default ()=>{}
 
-### Run Challenge
+export const funcA =()=>{}
+export const funcB =()=>{}
+export const funcC =()=>{}
+```
+- Use index file to export functions from your package.
 
-Implement challenge and then run challenge script with challenge number
+```js
+//package/index.js
+
+import moduleA from './moduleA'
+export * from './moduleA'
+export {moduleA}
 ```
-$ node src/index.js $challenge
-```
+
