@@ -7,7 +7,7 @@ import challenges from './challenges'
 const App = () => {
     return (
         <BrowserRouter>
-            <div>
+            <div style={{margin:16}}>
                 <nav>
                     <ul>
                         {Object.keys(challenges).map(x => (

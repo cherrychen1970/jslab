@@ -23,7 +23,9 @@ const users = [
 export default () => {
     const [selectedId, setSelectedId] = useState(0)
 
+    // implement this
     const handleClick = () => { }
+    
     return (
         <ul style={{width:256}}>
             {users.map(user => (
