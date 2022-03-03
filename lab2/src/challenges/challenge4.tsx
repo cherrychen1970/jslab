@@ -2,7 +2,7 @@ import { Fragment, useState } from "react"
 
 const smile = '\u{1F600}'
 
-// Challenge : 
+// Challenge : Smile Challenge, when user types ':smile', convert it to smile symbol
 export default () => {
     const [value, setValue] = useState([])
 
