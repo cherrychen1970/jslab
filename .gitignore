@@ -102,4 +102,4 @@ dist
 
 # TernJS port file
 .tern-port
-lab1/package-lock.json
+**/package-lock.json
