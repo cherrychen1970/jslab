@@ -36,7 +36,6 @@ export const SimpleForm = ({ record = {}, onSubmit, validate = undefined, childr
                                     key: child.props.name,
                                     record: record,
                                     initialValue: record[child.props.name],
-                                    handleSubmit:handleSubmit
                                 }
                             )
                         )}
