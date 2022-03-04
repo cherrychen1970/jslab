@@ -1,5 +1,5 @@
 @url=https://jsonplaceholder.typicode.com
-
+#@url=http://localhost:5000
 ###
 get {{url}}/users
 
