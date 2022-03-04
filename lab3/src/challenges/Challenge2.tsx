@@ -1,7 +1,8 @@
 import axios from "axios";
+import * as _ from 'lodash'
 import { cloneElement, createElement, Fragment, useEffect, useState } from "react"
 import { Link, Route, Switch, useParams, useRouteMatch } from "react-router-dom"
-import { ListView } from "./Challenge1";
+import { dataProvider, ListView } from "./Challenge1";
 
 
 // data provider
@@ -21,20 +22,20 @@ const Challenge = () => {
 }
 
 // custom Hook to getList()
-export const useGetList = (resource) => {
+export const useGetList = (resource, filterValues = {}, perPage = 10) => {
     const [data, setData] = useState([])
+    const [prevFilterValues, setPrevFilterValues] = useState<any>(null)
 
-    const getList = async () => {
-        try {
-            const response = await axios.get(`${url}/${resource}?_limit=20`);
-            setData(response.data)
-        } catch (error) {
-            console.error(error);
-        }
-    }
     useEffect(() => {
-        getList()
-    }, [resource])
+        console.log(filterValues)
+        if (!_.isEqual(prevFilterValues, filterValues)) {
+            dataProvider.getList(resource, filterValues, perPage)
+                .then(data => setData(data))
+            setPrevFilterValues(filterValues)
+        }
+    }, [ resource,filterValues,perPage ]
+        //[resource,filterValues,perPage]
+    )
 
     return data
 }

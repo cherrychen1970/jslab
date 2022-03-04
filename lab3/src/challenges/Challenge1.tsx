@@ -32,12 +32,13 @@ const Challenge = () => {
 
 // Challenge : 
 export const dataProvider = {
-    getList: async (resource, perPage = 10) => {
+    getList: async (resource, filterValues={},perPage = 10) => {
         try {
-            const response = await axios.get(`${url}/${resource}?_limit=${perPage}`);
+            let params = {...filterValues, _limite:perPage}
+            const response = await axios.get(`${url}/${resource}`,{params:params});
             return response.data
-        } catch (error: any) {
-            alert(error);
+        } catch (error) {
+            console.error(error);
         }
     },
     // imeplement getone
@@ -54,8 +55,10 @@ export const ShowView = ({ record, render }) => {
     return <span> {render(record)} </span>
 }
 
-export const ListView = ({ basePath, data, renderItem }) => {
-    return data && data.length > 0 &&
+export const ListView = ({ basePath = '', data,
+    renderItem = (r) => `${r.id}: ${r.name}`
+}) => {
+    return (data && data.length > 0)?
         <div>
             <h3>List </h3>
             <ul style={{ width: 256 }}>
@@ -66,7 +69,7 @@ export const ListView = ({ basePath, data, renderItem }) => {
                     </li>
                 ))}
             </ul>
-        </div>
+        </div>:null
 }
 
 const ShowButton = ({ basePath, id }) => {

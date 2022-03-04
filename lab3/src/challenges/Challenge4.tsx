@@ -21,6 +21,7 @@ const Challenge = () => {
 }
 
 export const SimpleForm = ({ record = {}, onSubmit, validate = undefined, children }) => {
+    console.log(children)
     return (
         <Form
             onSubmit={onSubmit}
@@ -34,7 +35,8 @@ export const SimpleForm = ({ record = {}, onSubmit, validate = undefined, childr
                                 {
                                     key: child.props.name,
                                     record: record,
-                                    initialValue: record[child.props.name]
+                                    initialValue: record[child.props.name],
+                                    handleSubmit:handleSubmit
                                 }
                             )
                         )}
