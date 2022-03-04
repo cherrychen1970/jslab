@@ -9,10 +9,14 @@ const url = "http://localhost:5000"
 
 const Challenge = () => {
     const data = useGetList('users')
-    const record = useGetOne('users',1)
+    const record = useGetOne('users', 1)
     return <div>
-        <ListView data={data} renderItem={(record)=>`${record.id}: ${record.name}`}/>
-        <SingleView record={record}/>
+        <ListView
+            basePath=''
+            data={data}
+            renderItem={(record) => `${record.id}: ${record.name}`}
+        />
+        <SingleView record={record} />
     </div>
 }
 
@@ -55,7 +59,7 @@ export const useGetOne = (resource, id) => {
 }
 
 // Challenge : impelment this.
-const SingleView = ({record}) => {
+const SingleView = ({ record }) => {
     return <span>Not imeplemented</span>
 }
 

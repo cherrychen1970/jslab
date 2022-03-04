@@ -1,8 +1,6 @@
 import { cloneElement } from 'react'
 import { Form, Field } from 'react-final-form'
 
-
-
 const Challenge = () => {
     const onSubmit = async values => {
         window.alert(JSON.stringify(values, null, 2))
@@ -17,7 +15,7 @@ const Challenge = () => {
             <TextInput name='address' />
             <NumberInput name="age" initialValue={30} />
             <DateInput name="birthday" />
-            <SelectInput name="sex" choices={choices} optionText={(choice)=>`${choice.name}`}/>
+            <SelectInput name="sex" choices={choices} optionText={(choice) => `${choice.name}`} />
             <BooleanInput name="" />
         </SimpleForm>)
 }
@@ -29,15 +27,17 @@ export const SimpleForm = ({ record = {}, onSubmit, validate = undefined, childr
             validate={validate}
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit}>
-                    {children.map(child =>
-                        child && cloneElement(child,
-                            {
-                                key: child.props.name,
-                                record: record,
-                                initialValue: record[child.props.name]
-                            }
-                        )
-                    )}
+                    {
+                        // clone inputs
+                        children.map(child =>
+                            child && cloneElement(child,
+                                {
+                                    key: child.props.name,
+                                    record: record,
+                                    initialValue: record[child.props.name]
+                                }
+                            )
+                        )}
                     <SubmitButton />
                 </form>
             )}
@@ -53,22 +53,8 @@ export const TextInput = (props) => {
     </div>
 }
 
-export const NumberInput = (props) => {
-    return <div>
-        <label>{props.name}</label>
-        <Field {...props} type="number" component="input" />
-    </div>
-}
-
-export const DateInput = (props) => {
-    return <div>
-        <label>{props.name}</label>
-        <Field {...props} type="date" component="input" />
-    </div>
-}
-
 // challenge : implement optionText to support renderProp optionText = (record)=>{}
-export const SelectInput = ({ name, choices, optionText="name", optionValue = "id", ...props }:any) => {
+export const SelectInput = ({ name, choices, optionText = "name", optionValue = "id", ...props }: any) => {
     return <div>
         <label>{name}</label>
         <Field name={name} {...props} component='select' >
@@ -83,9 +69,19 @@ export const SelectInput = ({ name, choices, optionText="name", optionValue = "i
     </div>
 }
 
-// Challenge : implement boolean input
+// Challenge 
+export const NumberInput = (props) => {
+    return <span>Not Implemented</span>
+}
+
+// Challenge 
+export const DateInput = (props) => {
+    return <span>Not Implemented</span>
+}
+
+// Challenge 
 export const BooleanInput = ({ name, ...props }) => {
-    return null
+    return <span>Not Implemented</span>
 }
 
 const choices = [

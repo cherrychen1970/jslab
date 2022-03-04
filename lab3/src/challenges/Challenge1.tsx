@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link, useRouteMatch } from "react-router-dom";
 
 // data provider
 const url = "http://localhost:5000"
@@ -7,6 +8,7 @@ const url = "http://localhost:5000"
 // Challenge : sample fetches single user. change code to fetch users and display list.
 
 const Challenge = () => {
+    let match = useRouteMatch();
     const [user, setUser] = useState<any>(null)
     const [users, setUsers] = useState<any>(null)
 
@@ -19,7 +21,11 @@ const Challenge = () => {
         <div>
             <h4>Let's learn how to fetch data </h4>
             {user && <ShowView record={user} render={(record) => `${record.id}: ${record.name}`} />}
-            {users && <ListView data={users} renderItem={(record) => `${record.id}: ${record.name}`} />}
+            {users && <ListView
+                basePath={match.url}
+                data={users}
+                renderItem={(record) => `${record.id}: ${record.name}`}
+            />}
         </div>
     )
 }
@@ -48,7 +54,7 @@ export const ShowView = ({ record, render }) => {
     return <span> {render(record)} </span>
 }
 
-export const ListView = ({ data, renderItem }) => {
+export const ListView = ({ basePath, data, renderItem }) => {
     return data && data.length > 0 &&
         <div>
             <h3>List </h3>
@@ -56,10 +62,15 @@ export const ListView = ({ data, renderItem }) => {
                 {data.map((record: any) => (
                     <li key={record.id}>
                         <span> {renderItem(record)} </span>
+                        <ShowButton basePath={basePath} id={record.id} />
                     </li>
                 ))}
             </ul>
         </div>
+}
+
+const ShowButton = ({ basePath, id }) => {
+    return <Link to={`${basePath}/show/${id}`}>Show</Link>
 }
 
 export default { title: 'Data', challenge: Challenge }

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { cloneElement, createElement, Fragment, useEffect, useState } from "react"
 import { Link, Route, Switch, useParams, useRouteMatch } from "react-router-dom"
+import { ListView } from "./Challenge1";
 import { useGetList, useGetOne } from "./Challenge2";
 
 
@@ -29,57 +30,33 @@ const ResourceMenu = ({ name }) => {
     </Fragment>
 }
 
-const ResourceRoute = ({ name, list=null, show=null, create=null, edit=null }:any) => {
+const ResourceRoute = ({ name, list = null, show = null, create = null, edit = null }: any) => {
     let match = useRouteMatch();
+    let basePath = `${match.path}/${name}`
     return <Switch>
         {create && <Route key={name} path={`${match.path}/${name}/create`} render={
-            renderProps => createElement(create, { resource: name })
+            renderProps => createElement(create, { basePath: basePath, resource: name })
         } />}
         {show && <Route key={name} path={`${match.path}/${name}/show/:id`} render={
-            renderProps => createElement(show, { resource: name })
+            renderProps => createElement(show, { basePath: basePath, resource: name })
         } />}
         {edit && <Route key={name} path={`${match.path}/${name}/:id`} render={
-            renderProps => createElement(edit, { resource: name })
+            renderProps => createElement(edit, { basePath: basePath, resource: name })
         } />}
         {list && <Route key={name} path={`${match.path}/${name}`} render={
-            renderProps => createElement(list, { resource: name })
+            renderProps => createElement(list, { basePath: basePath, resource: name })
         } />}
     </Switch>
 }
 
-const UserList = ({ resource }) => {
+const UserList = ({ basePath, resource }) => {
     const data = useGetList(resource)
-    return (
-        <div>
-            <ul style={{ width: 256 }}>
-                {data.map((record: any) => (
-                    <li key={record.id}>
-                        <span> {record.id}: {record.name} </span>
-                        <ShowButton id={record.id} />
-                    </li>
-                ))}
-            </ul>
-        </div>)
+    return <ListView basePath={basePath} data={data} renderItem={(record) => `${record.id}: ${record.name}`} />
 }
 
-const PostList = ({ resource }) => {
+const PostList = ({ basePath, resource }) => {
     const data = useGetList(resource)
-    return (
-        <div>
-            <ul style={{ width: 256 }}>
-                {data.map((record: any) => (
-                    <li key={record.id}>
-                        <span> {record.id}: {record.title} </span>
-                        <ShowButton id={record.id} />
-                    </li>
-                ))}
-            </ul>
-        </div>)
-}
-
-const ShowButton = ({ id }) => {
-    let match = useRouteMatch();
-    return <Link to={`${match.url}/show/${id}`}>Show</Link>
+    return <ListView basePath={basePath} data={data} renderItem={(record) => `${record.id}: ${record.title}`} />
 }
 
 // Challenge : use useGetOne
