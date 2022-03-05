@@ -1,4 +1,4 @@
-import React from "react"
+import React, { createElement } from "react"
 import { cloneElement, Fragment } from "react"
 import { NotImplemented } from "./helper"
 
@@ -26,6 +26,18 @@ const users = [
 const Challenge = () => {
     return <Fragment>
         <h4>Let's make small components</h4>
+
+        <div>
+            <h5> How to create react element?</h5>
+            <p> You can create element by using tag or programically.</p>
+            <Hello message="I am hello" />
+            {createElement(Hello, { message: 'I am hello created by createElement' })}
+            {cloneElement(<Hello message="I am hello created by cloneElement" />)}
+            {cloneElement(<Hello message="" />, { message: 'I am hello created by cloneElement with overiding message' })}
+        </div>
+
+        <hr />
+        <h5> Let's create some table view</h5>
         <GridView data={users}>
             <TextField source="name" />
             <TextField source="username" />
@@ -39,6 +51,8 @@ const Challenge = () => {
         </GridView>
     </Fragment>
 }
+
+const Hello = ({ message }) => <div>Hello, {message}</div>
 
 // Challenge : Add header to the table
 const GridView = ({ data, children }) => {
@@ -87,12 +101,12 @@ const TextField = ({ record, source }: any) => {
 
 // Challenge: create mailto link field
 const EmailField = ({ record, source }: any) => {
-    return <NotImplemented/>
+    return <NotImplemented />
 }
 
 // Challenge: create http web link field
 const WebsiteField = ({ record, source }: any) => {
-    return <NotImplemented/>
+    return <NotImplemented />
 }
 
 // this is example of render prop
@@ -102,7 +116,7 @@ const CustomField = ({ record, render }: any) => {
 
 // Challenge : implement FunctionField to use children prop for rendering record.
 const CustomField2 = ({ record, children }: any) => {
-    return <NotImplemented/>
+    return <NotImplemented />
 }
 
 export default { title: 'Component', challenge: Challenge }

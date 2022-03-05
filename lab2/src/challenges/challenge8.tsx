@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react"
+import { createContext, Fragment, useContext, useEffect, useState } from "react"
 
 const lookups = {
     smile: '\u{1F600}',
@@ -6,23 +6,27 @@ const lookups = {
     monkey: `\u{1F412}`
 }
 
+const smapleContext = createContext({ value: null, setValue: (value) => { } })
+
 // Challenge : take input from input component and pass it to smart display
 const Challenge = () => {
-    // you need to implement code here
-
+    const [value, setValue] = useState(null)
     return <Fragment>
-        <h4>This challenge is for sharing state between sibling components</h4>
-        <p> take input from input component and pass it to smart display. hint : use parent</p>
-        <Input />
-        <SmartDisplay lookups={lookups} value={''} />
+        <h4>This challenge is for sharing state between sibling components using context</h4>
+        <smapleContext.Provider value={{ value, setValue }}>
+            <Input />
+            <SmartDisplay lookups={lookups}/>
+        </smapleContext.Provider>
     </Fragment>
 }
 
-// you need to get some props from parent component
+// children can use context to receive passing values from parent
 const Input = ({ }) => {
+    const { setValue } = useContext(smapleContext)
     const handleChange = (event) => {
         let val = event.target.value
         // you need to implement code here
+        setValue(val)
     }
 
     return (
@@ -32,14 +36,15 @@ const Input = ({ }) => {
     )
 }
 
-const SmartDisplay = ({ value, lookups }) => {
+const SmartDisplay = ({ lookups }) => {
+    const { value } = useContext(smapleContext)
     const [text, setText] = useState<string>()
 
     useEffect(() => {
         if (value) {
             let val:string = value
             Object.keys(lookups).map(key => {
-                if (val.includes(key ))
+                if (val.includes(key))
                     val = val.replaceAll(key, lookups[key])
             })
             setText(val)
@@ -54,4 +59,4 @@ const SmartDisplay = ({ value, lookups }) => {
 
 }
 
-export default { title: 'Sharing State', challenge: Challenge }
+export default { title: 'Context', challenge: Challenge }

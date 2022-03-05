@@ -25,6 +25,8 @@ const Challenge = () => {
     return (
         <Fragment>
             <h4>Let's learn JSX Rendering</h4>
+           
+            <p>Implement header for the table</p>
             <table>
                 <thead>
                     <NotImplemented/>
@@ -43,6 +45,9 @@ const Challenge = () => {
                     ))}
                 </tbody>
             </table>
+            <h4>Reference</h4>
+
+            <p><a target="_blank" href="https://reactjs.org/docs/introducing-jsx.html">https://reactjs.org/docs/introducing-jsx.html</a></p>
         </Fragment>)
 }
 

@@ -5,6 +5,7 @@ import Challenge4 from './challenge4'
 import Challenge5 from './challenge5'
 import Challenge6 from './challenge6'
 import Challenge7 from './challenge7'
+import Challenge8 from './challenge8'
 
 const challenges:any = {}
 challenges.challenge1 = Challenge1
@@ -14,5 +15,6 @@ challenges.challenge4 = Challenge4
 challenges.challenge5 = Challenge5
 challenges.challenge6 = Challenge6
 challenges.challenge7 = Challenge7
+challenges.challenge8 = Challenge8
 
 export default challenges
