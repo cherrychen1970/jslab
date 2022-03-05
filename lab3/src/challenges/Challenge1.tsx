@@ -42,11 +42,32 @@ export const dataProvider = {
         }
     },
     // imeplement getone
-    getOne: async (resource, id) => { },
+    getOne: async (resource, id) => { 
+        try {
+            const response = await axios.get(`${url}/${resource}/${id}`);
+            return response.data
+        } catch (error) {
+            console.error(error);
+        } 
+    },
     // imeplement getone
-    create: async (resource, values) => { },
+    create: async (resource, values) => { 
+        try {
+            const response = await axios.post(`${url}/${resource}`,values);
+            return response.data
+        } catch (error) {
+            console.error(error);
+        }        
+    },
     // imeplement getone
-    update: async (resource, id, values) => { },
+    update: async (resource, id, values) => { 
+        try {
+            const response = await axios.put(`${url}/${resource}/${id}`,values);
+            return response.data
+        } catch (error) {
+            console.error(error);
+        }
+    },
     // imeplement getone
     delete: async (resource, id) => { },
 }
@@ -55,25 +76,40 @@ export const ShowView = ({ record, render }) => {
     return <span> {render(record)} </span>
 }
 
-export const ListView = ({ basePath = '', data,
+export const ListView = ({ basePath = '', data,hasShow=false,hasEdit=false,
     renderItem = (r) => `${r.id}: ${r.name}`
 }) => {
     return (data && data.length > 0)?
-        <div>
+        <div style={{width:'50%', display:'inline-block'}}>
             <h3>List </h3>
             <ul style={{ width: 256 }}>
                 {data.map((record: any) => (
                     <li key={record.id}>
                         <span> {renderItem(record)} </span>
-                        <ShowButton basePath={basePath} id={record.id} />
+                        {hasShow && <ShowButton basePath={basePath} id={record.id} />}
+                        {hasEdit && <EditButton basePath={basePath} id={record.id} />}
+                        <DeleteButton basePath={basePath} id={record.id} />
                     </li>
                 ))}
             </ul>
         </div>:null
 }
 
-const ShowButton = ({ basePath, id }) => {
+export const ShowButton = ({ basePath, id }) => {
     return <Link to={`${basePath}/show/${id}`}>Show</Link>
 }
+
+export const EditButton = ({ basePath, id }) => {
+    return <Link to={`${basePath}/${id}`}>Edit</Link>
+}
+
+export const DeleteButton = ({ basePath, id }) => {
+
+    return <button type="button" >Delete</button>
+}
+
+export const FlexDiv = ({ children }) =>
+    (<div style={{ display: 'inline-flex', width: '100%', border: 'solid 1px solid' }}>{children}</div>)
+
 
 export default { title: 'Data', challenge: Challenge }

@@ -11,3 +11,41 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+main {
+  display: flex;
+  margin-left: 1em;
+  margin-right: 1em;
+  width: 100%;
+}
+nav {
+  border-right: solid 1px #cccccc;
+  padding-left: 1em;
+  width: 300px;
+}
+
+ul {
+  list-style-type: none;
+  padding-inline-start: 0px
+}
+
+h2::first-letter {
+  text-transform:capitalize;
+}
+h4::first-letter {
+  text-transform:capitalize;
+}
+
+button {
+  border:0;
+  background-color:transparent;
+  text-decoration:underline;
+  color:blue;
+  font-size:1em;
+  cursor: pointer;
+}
+
+label {
+  min-width: 128px;
+  display: inline-block;
+}

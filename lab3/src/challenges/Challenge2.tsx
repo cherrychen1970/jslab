@@ -6,7 +6,7 @@ import { dataProvider, ListView } from "./Challenge1";
 
 
 // data provider
-const url = "http://localhost:5000"
+//const url = "http://localhost:5000"
 
 const Challenge = () => {
     const data = useGetList('users')
@@ -33,7 +33,7 @@ export const useGetList = (resource, filterValues = {}, perPage = 10) => {
                 .then(data => setData(data))
             setPrevFilterValues(filterValues)
         }
-    }, [ resource,filterValues,perPage ]
+    }, [resource, filterValues, perPage]
         //[resource,filterValues,perPage]
     )
 
@@ -45,23 +45,22 @@ export const useGetOne = (resource, id) => {
     const [record, setRecord] = useState({})
 
     const getOne = async () => {
-        try {
-            const response = await axios.get(`${url}/${resource}/${id}`);
-            setRecord(response.data)
-        } catch (error) {
-            console.error(error);
-        }
+        setRecord(await dataProvider.getOne(resource, id))
     }
+
     useEffect(() => {
         getOne()
-    }, [resource])
+    }, [resource, id])
 
     return record
 }
 
 // Challenge : impelment this.
 const SingleView = ({ record }) => {
-    return <span>Not imeplemented</span>
+    return <div>
+        <h4>Item</h4>
+        Not imeplemented
+    </div>
 }
 
 export default { title: 'Hooks', challenge: Challenge }

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { cloneElement, createElement, Fragment, useEffect, useState } from "react"
 import { Link, Route, Switch, useParams, useRouteMatch } from "react-router-dom"
-import { ListView } from "./Challenge1";
+import { FlexDiv, ListView, ShowView } from "./Challenge1";
 import { useGetList, useGetOne } from "./Challenge2";
 
 
@@ -9,59 +9,84 @@ import { useGetList, useGetOne } from "./Challenge2";
 const url = "http://localhost:5000"
 
 const Challenge = () => {
-    return <div>
-        <ul>
-            <ResourceMenu name="users" />
-            <ResourceMenu name="posts" />
-        </ul>
+    return <FlexDiv>
+        <div style={{ width: 100, display: 'inline-block' }}>
+            <ul>
+                <ResourceMenu name="users" />
+                <ResourceMenu name="posts" />
+            </ul>
+        </div>
         <div>
             <ResourceRoute name="users" list={UserList} show={UserShow} />
             <ResourceRoute name="posts" list={PostList} show={PostShow} />
         </div>
-    </div>
+    </FlexDiv>
 }
 
-const ResourceMenu = ({ name }) => {
+export const ResourceMenu = ({ name }) => {
     let match = useRouteMatch();
-    return <Fragment>
-        <li>
-            <Link to={`${match.url}/${name}`}>{name}</Link>
-        </li>
-    </Fragment>
+    return <li>
+        <Link to={`${match.url}/${name}`}><h4>{name}</h4></Link>
+    </li>
 }
 
-const ResourceRoute = ({ name, list = null, show = null, create = null, edit = null }: any) => {
+
+export const ResourceRoute = ({ name, list = null, show = null, create = null, edit = null, ...props }: any) => {
     let match = useRouteMatch();
-    let basePath = `${match.path}/${name}`
-    return <Switch>
-        {create && <Route key={name} path={`${match.path}/${name}/create`} render={
-            renderProps => createElement(create, { basePath: basePath, resource: name })
-        } />}
-        {show && <Route key={name} path={`${match.path}/${name}/show/:id`} render={
-            renderProps => createElement(show, { basePath: basePath, resource: name })
-        } />}
-        {edit && <Route key={name} path={`${match.path}/${name}/:id`} render={
-            renderProps => createElement(edit, { basePath: basePath, resource: name })
-        } />}
-        {list && <Route key={name} path={`${match.path}/${name}`} render={
-            renderProps => createElement(list, { basePath: basePath, resource: name })
-        } />}
-    </Switch>
+    let basePath = props.basePath ? props.basePath : `${match.path}/${name}`
+    return (
+        <FlexDiv>
+            <div>
+                <Switch>
+                    {list && <Route key={name} path={`${basePath}`} render={
+                        renderProps => createElement(list,
+                            {
+                                basePath: basePath,
+                                resource: name,
+                                hasShow: !!show,
+                                hasEdit: !!edit,
+                                hasCreate: !!create,
+                            })
+                    } />}
+                </Switch>
+            </div>
+            <div>
+                <Switch>
+                    {create && <Route key={name} path={`${basePath}/create`} render={
+                        renderProps => createElement(create, { basePath: basePath, resource: name })
+                    } />}
+                    {show && <Route key={name} path={`${basePath}/show/:id`} render={
+                        renderProps => createElement(show, { basePath: basePath, resource: name })
+                    } />}
+                    {edit && <Route key={name} path={`${basePath}/:id`} render={
+                        renderProps => createElement(edit, { basePath: basePath, resource: name })
+                    } />}
+                </Switch>
+            </div>
+        </FlexDiv>)
 }
 
-const UserList = ({ basePath, resource }) => {
+export const UserList = ({ resource, ...props }: any) => {
     const data = useGetList(resource)
-    return <ListView basePath={basePath} data={data} renderItem={(record) => `${record.id}: ${record.name}`} />
+    return <ListView {...props} resource={resource} data={data} renderItem={(record) => `${record.id}: ${record.name}`} />
 }
 
-const PostList = ({ basePath, resource }) => {
+export const PostList = ({ resource, ...props }: any) => {
     const data = useGetList(resource)
-    return <ListView basePath={basePath} data={data} renderItem={(record) => `${record.id}: ${record.title}`} />
+    return <ListView {...props} resource={resource} data={data} renderItem={(record) => `${record.id}: ${record.title}`} />
 }
 
 // Challenge : use useGetOne
 const UserShow = ({ resource }) => {
-    return <span>Not Implemented</span>
+    const params: any = useParams()
+    const record: any = useGetOne(resource, params.id)
+    return <div>
+        <h4>User : {params.id}</h4>
+        <div>
+            <label>name</label>
+            <span>{record.name}</span>
+        </div>
+    </div>
 }
 
 // Challenge : use useGetOne

@@ -48,7 +48,7 @@ export const SimpleForm = ({ record = {}, onSubmit, validate = undefined, childr
 export const SubmitButton = ({ label = "Submit" }) => <button type="submit">{label}</button>
 
 export const TextInput = (props) => {
-    return <div>
+    return <div style={{margin:'1em', marginLeft:0}}>
         <label>{props.name}</label>
         <Field {...props} type="text" component="input" />
     </div>

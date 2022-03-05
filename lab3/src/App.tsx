@@ -7,7 +7,7 @@ import challenges from './challenges'
 const App = () => {
     return (
         <BrowserRouter>
-            <div style={{ margin: 16, display: 'flex' }}>
+            <div style={{ display: 'flex' }}>
                 <nav>
                     <ul>
                         {Object.keys(challenges).map(x => (
@@ -18,13 +18,13 @@ const App = () => {
                         }
                     </ul>
                 </nav>
-                <main style={{ marginLeft: 16, display: 'flex' }}>
+                <main>
                     <Switch>
                         {Object.keys(challenges).map(x => (
                             <Route key={x} path={`/${x}`} render={
                                 renderProps =>
-                                    <div>
-                                        <h4>{x}: {challenges[x].title}</h4>
+                                    <div style={{ marginLeft: 16, width:'100%' }}>
+                                        <h2  style={{ borderBottom:"solid 2px #555555" }}  >{x}: {challenges[x].title}</h2>
                                         {createElement(challenges[x].challenge)}
                                     </div>
                             } />
