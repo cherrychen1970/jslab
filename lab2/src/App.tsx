@@ -7,51 +7,35 @@ import challenges from './challenges'
 const App = () => {
     return (
         <BrowserRouter>
-            <div style={{margin:16}}>
+            <div style={{ display: 'flex' }}>
                 <nav>
                     <ul>
                         {Object.keys(challenges).map(x => (
                             <li key={x}>
-                                <Link to={`/${x}`}>{x}</Link>
+                                <Link to={`/${x}`}><h4>{x}: {challenges[x].title}</h4> </Link>
                             </li>
                         ))
                         }
                     </ul>
                 </nav>
-                <Switch>
-                    {Object.keys(challenges).map(x => (
-                        <Route key={x} path={`/${x}`} render={
-                            renderProps => createElement(challenges[x])
-                        } />
-                    ))
-                    }
-                </Switch>
+                <main>
+                    <Switch>
+                        {Object.keys(challenges).map(x => (
+                            <Route key={x} path={`/${x}`} render={
+                                renderProps =>
+                                    <div style={{ marginLeft: 16, width:'100%' }}>
+                                        <h2  style={{ borderBottom:"solid 2px #555555" }}  >{x}: {challenges[x].title}</h2>
+                                        {createElement(challenges[x].challenge)}
+                                    </div>
+                            } />
+                        ))
+                        }
+                    </Switch>
+                </main>
             </div>
         </BrowserRouter>
 
     );
-}
-
-class ErrorBoundary extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { error: null };
-    }
-
-    static getDerivedStateFromError(error) {
-        return { hasError: true };
-    }
-
-    componentDidCatch(error, errorInfo) {
-        this.setState({ error: error })
-        //log the error to an error reporting service
-    }
-
-    render() {
-        const { error }: any = this.state
-        return error ? <h1>Oops, something went wrong.</h1> :
-            this.props.children;
-    }
 }
 
 export default App

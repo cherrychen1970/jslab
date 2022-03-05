@@ -1,5 +1,6 @@
 import React from "react"
 import { cloneElement, Fragment } from "react"
+import { NotImplemented } from "./helper"
 
 const users = [
     {
@@ -22,35 +23,28 @@ const users = [
 
 // Let's make small components
 
-export default () => {
-    return <GridView data={users}>
-        <TextField source="name" />
-        <TextField source="username" />
-        <TextField source="email" />
-        <TextField source="phone" />
-        <CustomField render={(record) => `www.${record.website}`} />
-        <CustomField2>
-            {(record) => `www.${record.website}`}
-        </CustomField2>
-    </GridView>
+const Challenge = () => {
+    return <Fragment>
+        <h4>Let's make small components</h4>
+        <GridView data={users}>
+            <TextField source="name" />
+            <TextField source="username" />
+            <EmailField source="email" />
+            <TextField source="phone" />
+            <WebsiteField source="website" />
+            <CustomField render={(record) => `www.${record.website}`} />
+            <CustomField2>
+                {(record) => `www.${record.website}`}
+            </CustomField2>
+        </GridView>
+    </Fragment>
 }
 
 // Challenge : Add header to the table
 const GridView = ({ data, children }) => {
     return <Table>
-        <tbody>
-            {data.map(record => (
-                <tr key={record.id}>
-                    {
-                        children.map((child, index) => (
-                            <Cell key={index}>
-                                {cloneElement(child, { record })}
-                            </Cell>
-                        ))
-                    }
-                </tr>
-            ))}
-        </tbody>
+        <Head />
+        <Body data={data}>{children}</Body>
     </Table>
 }
 
@@ -60,6 +54,25 @@ const Table = ({ children }) => (
         {children}
     </table>)
 
+const Head = () => {
+    return <NotImplemented />
+}
+
+const Body = ({ data, children }) => {
+    return <tbody>
+        {data.map(record => (
+            <tr key={record.id}>
+                {
+                    children.map((child, index) => (
+                        <Cell key={index}>
+                            {cloneElement(child, { record })}
+                        </Cell>
+                    ))
+                }
+            </tr>
+        ))}
+    </tbody>
+}
 // example of custom cell
 const Cell = ({ children }) => (
     <td style={{ border: "solid 1px black" }}>
@@ -72,6 +85,16 @@ const TextField = ({ record, source }: any) => {
     return <span>{record[source]}</span>
 }
 
+// Challenge: create mailto link field
+const EmailField = ({ record, source }: any) => {
+    return <NotImplemented/>
+}
+
+// Challenge: create http web link field
+const WebsiteField = ({ record, source }: any) => {
+    return <NotImplemented/>
+}
+
 // this is example of render prop
 const CustomField = ({ record, render }: any) => {
     return render ? <Fragment>{render(record)}</Fragment> : null
@@ -79,5 +102,7 @@ const CustomField = ({ record, render }: any) => {
 
 // Challenge : implement FunctionField to use children prop for rendering record.
 const CustomField2 = ({ record, children }: any) => {
-    return <span>Error</span>
+    return <NotImplemented/>
 }
+
+export default { title: 'Component', challenge: Challenge }

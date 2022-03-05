@@ -7,13 +7,14 @@ const lookups = {
 }
 
 // Challenge : take input from input component and pass it to smart display
-export default () => {
+const Challenge = () => {
     // you need to implement code here
 
     return <Fragment>
-        <h4>This challenge is for passing state between component, also let's learn about useEffect too</h4>
+        <h4>This challenge is for sharing state between components</h4>
+        <p> take input from input component and pass it to smart display </p>
         <Input />
-        <SmartDisplay lookups={lookups} text={''} />
+        <SmartDisplay lookups={lookups} value={''} />
     </Fragment>
 }
 
@@ -26,24 +27,28 @@ const Input = ({ }) => {
 
     return (
         <div>
-            <input type='text' onChange={handleChange}/>
+            <input type='text' onChange={handleChange} />
         </div>
     )
 }
 
-const SmartDisplay = ({ text, lookups }) => {
-    const [value, setValue] = useState([])
+const SmartDisplay = ({ value, lookups }) => {
+    const [text, setText] = useState([])
 
-    // you need to fix something here.
     useEffect(() => {
-        let val = text
-        // implement here
+        let val = value
         Object.keys(lookups).map(key => {
             if (val.includes(key))
                 val = val.replaceAll(key, lookups[key])
         })
-        setValue(val)
-    }, [])
+        setText(val)
+    }, [lookups, value])
 
-    return <span>{value}</span>
+    return <div>
+        <h5>Smart Display saying:</h5>
+        <span>{value}</span>
+    </div>
+
 }
+
+export default { title: 'Sharing State', challenge: Challenge }

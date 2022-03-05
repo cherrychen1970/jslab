@@ -1,3 +1,5 @@
+import { Fragment } from "react"
+import { NotImplemented } from "./helper"
 
 const users = [
     {
@@ -19,24 +21,29 @@ const users = [
 ]
 
 // Challenge : add header for the table
-export default () => {
+const Challenge = () => {
     return (
-        <table>
-            <thead>
-                
-            </thead>
-            <tbody>
-                {users.map(user => (
-                    <tr key={user.id}>
-                        {
-                            Object.keys(user).map((key, index) => (
-                                <td key={index}>
-                                    {user[key]}
-                                </td>
-                            ))
-                        }
-                    </tr>
-                ))}
-            </tbody>
-        </table>)
+        <Fragment>
+            <h4>Let's learn JSX Rendering</h4>
+            <table>
+                <thead>
+                    <NotImplemented/>
+                </thead>
+                <tbody>
+                    {users.map(user => (
+                        <tr key={user.id}>
+                            {
+                                Object.keys(user).map((key, index) => (
+                                    <td key={index}>
+                                        {user[key]}
+                                    </td>
+                                ))
+                            }
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </Fragment>)
 }
+
+export default { title: 'JSX', challenge: Challenge }

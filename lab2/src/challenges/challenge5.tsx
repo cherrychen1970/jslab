@@ -7,8 +7,8 @@ const lookups = {
     monkey: `\u{1F412}`
 }
 
-// Challenge : When user types word from lookups, convert it to the symbol
-export default () => {
+// Challenge : When user types :word from lookups, convert it to the symbol
+const Challenge= () => {
     return <SmartInput lookups={lookups} />
 }
 
@@ -23,7 +23,9 @@ const SmartInput = ({ lookups:{} }) => {
     }
 
     return <div>
-        <h3>when user types word from lookups, convert it to the symbol</h3>
+        <h4>when user types word from lookups, convert it to the symbol</h4>
         <input type='text' onChange={handleChange} value={value} />
     </div>
 }
+
+export default { title: 'State', challenge: Challenge }

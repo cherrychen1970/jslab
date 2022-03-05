@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { Fragment, useState } from "react"
 
 const users = [
     {
@@ -20,19 +20,34 @@ const users = [
 ]
 
 // Challenge : highlight item with different color than the rest when clicked,
-export default () => {
+const Challenge = () => {
     const [selectedId, setSelectedId] = useState(0)
 
-    // implement this
-    const handleClick = () => { }
-    
+    const handleClick = (id) => { 
+        alert('not implemented') 
+    }
+
     return (
-        <ul style={{width:256}}>
-            {users.map(user => (
-                <li key={user.id} onClick={handleClick} 
-                    style={{color:'grey'}}>
-                    {user.id}: {user.name}
-                </li>
-            ))}
-        </ul>)
+        <Fragment>
+            <h4>Let's learn how state works </h4>
+            <ul style={{ width: 256 }}>
+                {users.map(user => (
+                    <li
+                        key={user.id}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleClick(user.id)}
+                    >
+                        <ColorText color="grey">
+                            {user.id}: {user.name} (click me)
+                        </ColorText>
+                    </li>
+                ))}
+            </ul>
+        </Fragment>)
 }
+
+const ColorText = ({ children, color }) => {
+    return <span style={{ color }} >{children}</span>
+}
+
+export default { title: 'State', challenge: Challenge }
