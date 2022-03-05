@@ -32,37 +32,37 @@ const Challenge = () => {
 
 // Challenge : 
 export const dataProvider = {
-    getList: async (resource, filterValues={},perPage = 10) => {
+    getList: async (resource, filterValues = {}, perPage = 10) => {
         try {
-            let params = {...filterValues, _limite:perPage}
-            const response = await axios.get(`${url}/${resource}`,{params:params});
+            let params = { ...filterValues, _limite: perPage }
+            const response = await axios.get(`${url}/${resource}`, { params: params });
             return response.data
         } catch (error) {
             console.error(error);
         }
     },
     // imeplement getone
-    getOne: async (resource, id) => { 
+    getOne: async (resource, id) => {
         try {
             const response = await axios.get(`${url}/${resource}/${id}`);
             return response.data
         } catch (error) {
             console.error(error);
-        } 
+        }
     },
     // imeplement getone
-    create: async (resource, values) => { 
+    create: async (resource, values) => {
         try {
-            const response = await axios.post(`${url}/${resource}`,values);
+            const response = await axios.post(`${url}/${resource}`, values);
             return response.data
         } catch (error) {
             console.error(error);
-        }        
+        }
     },
     // imeplement getone
-    update: async (resource, id, values) => { 
+    update: async (resource, id, values) => {
         try {
-            const response = await axios.put(`${url}/${resource}/${id}`,values);
+            const response = await axios.put(`${url}/${resource}/${id}`, values);
             return response.data
         } catch (error) {
             console.error(error);
@@ -76,12 +76,13 @@ export const ShowView = ({ record, render }) => {
     return <span> {render(record)} </span>
 }
 
-export const ListView = ({ basePath = '', data,hasShow=false,hasEdit=false,
+export const ListView = ({ basePath = '', data, hasShow = false, hasEdit = false, hasCreate=false,
     renderItem = (r) => `${r.id}: ${r.name}`
 }) => {
-    return (data && data.length > 0)?
-        <div style={{width:'50%', display:'inline-block'}}>
+    return (data && data.length > 0) ?
+        <div style={{ width: '50%', display: 'inline-block' }}>
             <h3>List </h3>
+            {hasCreate&& <Link to={`${basePath}/create`}>Create</Link>}
             <ul style={{ width: 256 }}>
                 {data.map((record: any) => (
                     <li key={record.id}>
@@ -92,7 +93,7 @@ export const ListView = ({ basePath = '', data,hasShow=false,hasEdit=false,
                     </li>
                 ))}
             </ul>
-        </div>:null
+        </div> : null
 }
 
 export const ShowButton = ({ basePath, id }) => {
@@ -108,8 +109,8 @@ export const DeleteButton = ({ basePath, id }) => {
     return <button type="button" >Delete</button>
 }
 
-export const FlexDiv = ({ children }) =>
-    (<div style={{ display: 'inline-flex', width: '100%', border: 'solid 1px solid' }}>{children}</div>)
+export const FlexDiv = ({ fullWidth = false, children }) =>
+    (<div style={{ display: 'inline-flex', width: ` ${fullWidth && '100%'}`, border: 'solid 1px solid' }}>{children}</div>)
 
 
 export default { title: 'Data', challenge: Challenge }

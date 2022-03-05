@@ -33,8 +33,6 @@ const UserEdit = ({ resource }) => {
             <TextInput name='name' />
             <TextInput name='email' />
             <TextInput name='website' />
-            <TextInput name='address.street' />
-            <TextInput name='address.city' />
         </SimpleForm>
     </div>
 }

@@ -9,17 +9,16 @@ import { useGetList, useGetOne } from "./Challenge2";
 const url = "http://localhost:5000"
 
 const Challenge = () => {
-    return <FlexDiv>
-        <div style={{ width: 100, display: 'inline-block' }}>
+    return <FlexDiv fullWidth>
+        {/* Menu */}
+        <div style={{ width: '20%', display: 'inline-block' }}>
             <ul>
                 <ResourceMenu name="users" />
                 <ResourceMenu name="posts" />
             </ul>
         </div>
-        <div>
-            <ResourceRoute name="users" list={UserList} show={UserShow} />
-            <ResourceRoute name="posts" list={PostList} show={PostShow} />
-        </div>
+        <ResourceRoute name="users" list={UserList} show={UserShow} />
+        <ResourceRoute name="posts" list={PostList} show={PostShow} />
     </FlexDiv>
 }
 
@@ -30,40 +29,37 @@ export const ResourceMenu = ({ name }) => {
     </li>
 }
 
-
+/* route for resource
+*/
 export const ResourceRoute = ({ name, list = null, show = null, create = null, edit = null, ...props }: any) => {
     let match = useRouteMatch();
     let basePath = props.basePath ? props.basePath : `${match.path}/${name}`
     return (
-        <FlexDiv>
-            <div>
-                <Switch>
-                    {list && <Route key={name} path={`${basePath}`} render={
-                        renderProps => createElement(list,
-                            {
-                                basePath: basePath,
-                                resource: name,
-                                hasShow: !!show,
-                                hasEdit: !!edit,
-                                hasCreate: !!create,
-                            })
-                    } />}
-                </Switch>
-            </div>
-            <div>
-                <Switch>
-                    {create && <Route key={name} path={`${basePath}/create`} render={
-                        renderProps => createElement(create, { basePath: basePath, resource: name })
-                    } />}
-                    {show && <Route key={name} path={`${basePath}/show/:id`} render={
-                        renderProps => createElement(show, { basePath: basePath, resource: name })
-                    } />}
-                    {edit && <Route key={name} path={`${basePath}/:id`} render={
-                        renderProps => createElement(edit, { basePath: basePath, resource: name })
-                    } />}
-                </Switch>
-            </div>
-        </FlexDiv>)
+        <Switch>
+            {list && <Route key={name} path={`${basePath}`} render={
+                renderProps => <FlexDiv fullWidth> {createElement(list,
+                    {
+                        basePath: basePath,
+                        resource: name,
+                        hasShow: !!show,
+                        hasEdit: !!edit,
+                        hasCreate: !!create,
+                    })}
+                    <Switch>
+                        {create && <Route key={name} path={`${basePath}/create`} render={
+                            renderProps => createElement(create, { basePath: basePath, resource: name })
+                        } />}
+                        {show && <Route key={name} path={`${basePath}/show/:id`} render={
+                            renderProps => createElement(show, { basePath: basePath, resource: name })
+                        } />}
+                        {edit && <Route key={name} path={`${basePath}/:id`} render={
+                            renderProps => createElement(edit, { basePath: basePath, resource: name })
+                        } />}
+                    </Switch>
+                </FlexDiv>
+            } />}
+        </Switch>
+    )
 }
 
 export const UserList = ({ resource, ...props }: any) => {

@@ -46,6 +46,6 @@ button {
 }
 
 label {
-  min-width: 128px;
+  min-width: 100px;
   display: inline-block;
 }
