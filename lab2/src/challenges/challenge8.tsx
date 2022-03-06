@@ -1,4 +1,5 @@
 import { createContext, Fragment, useContext, useEffect, useState } from "react"
+import { Reference } from "./helper"
 
 const lookups = {
     smile: '\u{1F600}',
@@ -6,17 +7,32 @@ const lookups = {
     monkey: `\u{1F412}`
 }
 
-const smapleContext = createContext({ value: null, setValue: (value) => { } })
+const smapleContext = createContext(
+    {
+        value: null,
+        setValue: (value) => { },
+
+        // 
+        text: null
+    }
+)
 
 // Challenge : take input from input component and pass it to smart display
 const Challenge = () => {
     const [value, setValue] = useState(null)
+    const [text, setText] =useState(null)
+
     return <Fragment>
         <h4>This challenge is for sharing state between sibling components using context</h4>
-        <smapleContext.Provider value={{ value, setValue }}>
+        <p>Modify code to support DumbDisplay to display text already converted by lookups</p>
+        <smapleContext.Provider value={{ value, setValue, text }}>
             <Input />
-            <SmartDisplay lookups={lookups}/>
+            <SmartDisplay lookups={lookups} />
+            <DumbDisplay/>
         </smapleContext.Provider>
+        <h4>Reference</h4>
+        <Reference url="https://reactjs.org/docs/context.html"/>
+        <Reference url="https://dmitripavlutin.com/react-context-and-usecontext/"/> 
     </Fragment>
 }
 
@@ -36,13 +52,21 @@ const Input = ({ }) => {
     )
 }
 
+const DumbDisplay = () =>  {
+    const { text } = useContext(smapleContext)
+    return <div>
+        <h5>Dumb Display saying:</h5>
+        <span>{text}</span>
+    </div>
+}
+
 const SmartDisplay = ({ lookups }) => {
     const { value } = useContext(smapleContext)
     const [text, setText] = useState<string>()
 
     useEffect(() => {
         if (value) {
-            let val:string = value
+            let val: string = value
             Object.keys(lookups).map(key => {
                 if (val.includes(key))
                     val = val.replaceAll(key, lookups[key])
@@ -56,7 +80,6 @@ const SmartDisplay = ({ lookups }) => {
         <h5>Smart Display saying:</h5>
         <span>{text}</span>
     </div>
-
 }
 
 export default { title: 'Context', challenge: Challenge }

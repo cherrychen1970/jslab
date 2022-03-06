@@ -1,5 +1,5 @@
 import { Fragment } from "react"
-import { NotImplemented } from "./helper"
+import { NotImplemented, Reference } from "./helper"
 
 const users = [
     {
@@ -46,8 +46,7 @@ const Challenge = () => {
                 </tbody>
             </table>
             <h4>Reference</h4>
-
-            <p><a target="_blank" href="https://reactjs.org/docs/introducing-jsx.html">https://reactjs.org/docs/introducing-jsx.html</a></p>
+            <Reference url="https://reactjs.org/docs/introducing-jsx.html"/>
         </Fragment>)
 }
 
