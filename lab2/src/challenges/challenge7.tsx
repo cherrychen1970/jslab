@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react"
-import { now } from "./helper"
+import { now, Reference } from "./helper"
 
 
 // Challenge : use Effect challenge
@@ -34,6 +34,10 @@ const Challenge = () => {
         <div>4 seconds elapsed time: <span>{time3}</span></div>
 
         <div>current time: <span>{time}</span></div>
+
+        <h4>Reference</h4>
+        <Reference url="https://reactjs.org/docs/hooks-effect.html"/>
+        <Reference url="https://dmitripavlutin.com/react-useeffect-explanation/"/>
     </Fragment>
 }
 

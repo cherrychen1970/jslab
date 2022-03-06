@@ -20,7 +20,7 @@ const smapleContext = createContext(
 // Challenge : take input from input component and pass it to smart display
 const Challenge = () => {
     const [value, setValue] = useState(null)
-    const [text, setText] =useState(null)
+    const [text, setText] = useState(null)
 
     return <Fragment>
         <h4>This challenge is for sharing state between sibling components using context</h4>
@@ -28,11 +28,11 @@ const Challenge = () => {
         <smapleContext.Provider value={{ value, setValue, text }}>
             <Input />
             <SmartDisplay lookups={lookups} />
-            <DumbDisplay/>
+            <DumbDisplay />
         </smapleContext.Provider>
         <h4>Reference</h4>
-        <Reference url="https://reactjs.org/docs/context.html"/>
-        <Reference url="https://dmitripavlutin.com/react-context-and-usecontext/"/> 
+        <Reference url="https://reactjs.org/docs/context.html" />
+        <Reference url="https://dmitripavlutin.com/react-context-and-usecontext/" />
     </Fragment>
 }
 
@@ -52,7 +52,7 @@ const Input = ({ }) => {
     )
 }
 
-const DumbDisplay = () =>  {
+const DumbDisplay = () => {
     const { text } = useContext(smapleContext)
     return <div>
         <h5>Dumb Display saying:</h5>
