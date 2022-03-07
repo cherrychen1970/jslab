@@ -93,32 +93,32 @@ const useSmartInput = (value) => {
 //////////////////////////////////////////////////////////////////////////////
 
 const authContext = createContext({
-    authenticated: false, 
-    login: async(user) => { },
-    logout: ()=>{}
+    authenticated: false,
+    login: async (user) => { },
+    logout: () => { }
 })
 
 const YourChallenge = () => {
     const [authenticated, setAuthenticated] = useState<any>()
 
-    const login = async(user) => {
+    const login = async (user) => {
         await sleep(3000)
         setAuthenticated(true)
-        sessionStorage.setItem('user',user)
+        sessionStorage.setItem('user', user)
     }
-    const logout = ()=>setAuthenticated(false)
+    const logout = () => setAuthenticated(false)
 
     return (
         <authContext.Provider value={{ authenticated, login, logout }}>
             <p>Challenge :  fix useIdentity()</p>
-            {!authenticated ? <Login />:<Logout/>}
+            {!authenticated ? <Login /> : <Logout />}
             <Restricted />
         </authContext.Provider>)
 }
 
 const Login = () => {
     const { login } = useContext(authContext)
-    return <TextInput buttonLabel="login" handleValue={async(user) => await login(user)} />
+    return <TextInput buttonLabel="login" handleValue={async (user) => await login(user)} />
 }
 
 const Logout = () => {
@@ -127,17 +127,20 @@ const Logout = () => {
 }
 
 const Restricted = ({ }) => {
+    const { authenticated } = useContext(authContext)
     const identity = useIdentity()
     return <div>
         <h4>Restricted Area</h4>
-        {identity.user==='admin' ?
-            <div>Congratualation!</div> :
-            <NotImplemented/>}
+        {identity.user === 'admin' ?
+            (authenticated ? <div>Congratualation!</div> :
+                <div>Something Wrong!</div>) :
+            <div>Access Denied</div>}
     </div>
 }
 
 // Challenge : this is not working. fix it. should return identity when authenticated, use useEffect
-const useIdentity = ():any => {
-    return {user:sessionStorage.getItem('user')}
+const useIdentity = (): any => {
+    // fix here
+    return { user: sessionStorage.getItem('user') }
 }
 export default { title: 'Hook', challenge: Challenge }
