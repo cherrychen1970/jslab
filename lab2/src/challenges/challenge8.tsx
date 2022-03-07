@@ -39,6 +39,7 @@ const Challenge = () => {
 // children can use context to receive passing values from parent
 const Input = ({ }) => {
     const { setValue } = useContext(smapleContext)
+    // Challenge
     const handleChange = (event) => {
         let val = event.target.value
         // you need to implement code here

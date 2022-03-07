@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from "react"
+import { Div } from "./helper"
 
 const lookups = {
     smile: '\u{1F600}',
@@ -12,9 +13,9 @@ const Challenge = () => {
 
     return <Fragment>
         <h4>This challenge is for sharing state between sibling components</h4>
-        <p> take input from input component and pass it to smart display. hint : use parent</p>
+        <p> take input from input component and pass it to smart display. hint : use parent state</p>
         <Input />
-        <SmartDisplay lookups={lookups} value={''} />
+        <SmartDisplay lookups={lookups}  />
     </Fragment>
 }
 
@@ -32,7 +33,7 @@ const Input = ({ }) => {
     )
 }
 
-const SmartDisplay = ({ value, lookups }) => {
+const SmartDisplay = ({ value='smile', lookups }) => {
     const [text, setText] = useState<string>()
 
     useEffect(() => {
@@ -49,7 +50,7 @@ const SmartDisplay = ({ value, lookups }) => {
 
     return <div>
         <h5>Smart Display saying:</h5>
-        <span>{text}</span>
+        <Div outline>{text}</Div>
     </div>
 
 }

@@ -18,7 +18,7 @@ const Challenge = () => {
     useEffect(()=>{
         if (time2!=='unknown')
             setTimeout(()=>{ setTime3(now())},2000)
-    },[time2])
+    },[time2]) // you can pass dependecies to useEffect
 
     // you need to implement code here, use setTimeout
     useEffect(()=>{

@@ -49,12 +49,14 @@ const chatContext = createContext({
     sendMessage: (message) => { }
 })
 
-// implement chat controller
+
 const useChatServerController = () => {
     const [rooms, setRooms] = useState<any>(sampleData)
 
-    // Challenge
+    // Challenge : implement this
     const createRoom = (roomName) => {
+        const newRoom = {roomName:{messages:[]}}
+        // add your code
         notImplemented()
     }
 
@@ -66,16 +68,17 @@ const useChatServerController = () => {
         setRooms({ ...rooms, [roomName]: { messages: [...messages, newMessage] } })
     }
 
-    // Challenge
+    // Challenge : implement this
     const addNewMessage = (roomName, user, message) => {
         if (!rooms[roomName]) return
         const newMessage = { sender: user, content: message }
+        // add your code
         notImplemented()
     }
     return { rooms, createRoom, joinRoom, addNewMessage }
 }
 
-// implement chat controller
+
 const useChatController = (user) => {
     const { rooms, joinRoom: joinServerRoom, addNewMessage } = useContext(chatServerContext)
     const [roomName, setRoomName] = useState<any>('room1')
@@ -90,6 +93,7 @@ const useChatController = (user) => {
         addNewMessage(roomName, user, message)
     }
 
+    // side effect when there is change in the room
     useEffect(() => {
         if (roomName && rooms && rooms[roomName]) {
             setRoom({ name: roomName, messages: rooms[roomName].messages })
@@ -102,7 +106,7 @@ const useChatController = (user) => {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // UI
 const CreateRoom = () => {
-    return <TextInput label="Create Room" handleClick={notImplemented} buttonLabel="Create" />
+    return <TextInput label="Create Room" handleValue={notImplemented} buttonLabel="Create" />
 }
 
 const UserPanel = ({ user }) => {
@@ -119,7 +123,7 @@ const UserPanel = ({ user }) => {
 
 const JoinRoom = ({ }) => {
     const { rooms } = useContext(chatServerContext)
-    return <SelectInput label="Join Room" buttonLabel="Join" choices={Object.keys(rooms)} handleValue={()=>alert('not implemented')} />
+    return <SelectInput label="Join Room" buttonLabel="Join" choices={Object.keys(rooms)} handleValue={notImplemented} />
 }
 
 const ChatRoom = ({ }) => {
@@ -164,7 +168,7 @@ const Message = ({ message }) => {
 }
 
 const MessageInput = () => {
-    return <TextInput handleClick={notImplemented} />
+    return <TextInput handleValue={notImplemented} />
 }
 
 const BubbleContent = ({ content }) =>

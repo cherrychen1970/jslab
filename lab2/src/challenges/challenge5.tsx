@@ -15,15 +15,19 @@ const Challenge= () => {
 const SmartInput = ({ lookups:{} }) => {
     const [value, setValue] = useState([])
 
+    // challenge
     const handleChange = (event) => {
         let val = event.target.value
-        // implement here
+        // add your code here
 
         setValue(val)
     }
 
     return <div>
-        <h4>when user types word from lookups, convert it to the symbol</h4>
+        <h4>when user types word from 
+            [{ Object.keys(lookups).map(x=>` ${x},`)} ]
+            convert it to the 
+            [{ Object.keys(lookups).map(x=>` ${lookups[x]},`)}]</h4>
         <input type='text' onChange={handleChange} value={value} />
     </div>
 }
