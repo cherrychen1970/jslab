@@ -1,13 +1,12 @@
 import { createContext, Fragment, useContext, useEffect, useState } from "react"
-import { Div, SelectInput, TextInput } from "./helper"
+import { Div, notImplemented, SelectInput, TextInput } from "./helper"
 
-// Challenge : add header for the table
 const Challenge = () => {
     const chatServer = useChatServerController()
 
     return (
         <Fragment>
-            <h4 >Simple Chat</h4>
+            <h4 >Simple Chat : complete this application</h4>
             <chatServerContext.Provider value={chatServer}>
                 <CreateRoom />
                 <Div flex fullWidth style={{ alignContent: 'space-between' }}>
@@ -21,7 +20,6 @@ const Challenge = () => {
 // Business Logic 
 const sampleData = {
     room1: {
-        user: ['John', 'Jane'],
         messages: [
             {
                 sender: 'John',
@@ -37,10 +35,10 @@ const sampleData = {
 
 // This is server's context
 const chatServerContext = createContext({
-    rooms: {}, // dictionary of { roomName:{users,messages} } structure
+    rooms: {}, 
     createRoom: (roomName) => { },
     joinRoom: (roomName, user) => { },
-    sendMessage: (roomName, user, message) => { }
+    addNewMessage: (roomName, user, message) => { }
 })
 
 // This is each user's context
@@ -55,31 +53,33 @@ const chatContext = createContext({
 const useChatServerController = () => {
     const [rooms, setRooms] = useState<any>(sampleData)
 
+    // Challenge
     const createRoom = (roomName) => {
-        setRooms({ ...rooms, [roomName]: { users: [], messages: [] } })
+        notImplemented()
     }
+
+    // just add announcement message in the room
     const joinRoom = (roomName, user) => {
         if (!rooms[roomName]) return
-        const { users, messages } = rooms[roomName]
         const newMessage = { content: `${user} joined the room` }
-        setRooms({ ...rooms, [roomName]: { users: [...users, user], messages: [...messages, newMessage] } })
+        const { messages } = rooms[roomName]
+        setRooms({ ...rooms, [roomName]: { messages: [...messages, newMessage] } })
     }
 
-    const sendMessage = (roomName, user, message) => {
+    // Challenge
+    const addNewMessage = (roomName, user, message) => {
         if (!rooms[roomName]) return
-
-        const { [roomName]: room, ...rest } = rooms
         const newMessage = { sender: user, content: message }
-        setRooms({ ...rest, [roomName]: { ...room, messages: [...room.messages, newMessage] } })
+        notImplemented()
     }
-    return { rooms, createRoom, joinRoom, sendMessage }
+    return { rooms, createRoom, joinRoom, addNewMessage }
 }
 
 // implement chat controller
 const useChatController = (user) => {
-    const { rooms, joinRoom: joinServerRoom, sendMessage: sendRoomMessage } = useContext(chatServerContext)
-    const [room, setRoom] = useState<any>(null)
+    const { rooms, joinRoom: joinServerRoom, addNewMessage } = useContext(chatServerContext)
     const [roomName, setRoomName] = useState<any>('room1')
+    const [room, setRoom] = useState<any>(null)
 
     const joinRoom = (roomName) => {
         setRoomName(roomName)
@@ -87,13 +87,12 @@ const useChatController = (user) => {
     }
 
     const sendMessage = (message) => {
-        sendRoomMessage(roomName, user, message)
+        addNewMessage(roomName, user, message)
     }
 
     useEffect(() => {
         if (roomName && rooms && rooms[roomName]) {
-            let r = rooms[roomName]
-            setRoom({ name: roomName, messages: r.messages })
+            setRoom({ name: roomName, messages: rooms[roomName].messages })
         }
     }, [rooms[roomName]])
 
@@ -103,8 +102,7 @@ const useChatController = (user) => {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // UI
 const CreateRoom = () => {
-    const { createRoom } = useContext(chatServerContext)
-    return <TextInput label="Create Room" handleClick={createRoom} buttonLabel="Create" />
+    return <TextInput label="Create Room" handleClick={notImplemented} buttonLabel="Create" />
 }
 
 const UserPanel = ({ user }) => {
@@ -121,8 +119,7 @@ const UserPanel = ({ user }) => {
 
 const JoinRoom = ({ }) => {
     const { rooms } = useContext(chatServerContext)
-    const { joinRoom } = useContext(chatContext)
-    return <SelectInput label="Join Room" buttonLabel="Join" choices={Object.keys(rooms)} handleClick={joinRoom} />
+    return <SelectInput label="Join Room" buttonLabel="Join" choices={Object.keys(rooms)} handleValue={()=>alert('not implemented')} />
 }
 
 const ChatRoom = ({ }) => {
@@ -167,8 +164,7 @@ const Message = ({ message }) => {
 }
 
 const MessageInput = () => {
-    const { sendMessage }: any = useContext(chatContext)
-    return <TextInput handleClick={sendMessage} />
+    return <TextInput handleClick={notImplemented} />
 }
 
 const BubbleContent = ({ content }) =>

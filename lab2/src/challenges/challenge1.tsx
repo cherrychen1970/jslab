@@ -25,7 +25,6 @@ const Challenge = () => {
     return (
         <Fragment>
             <h4>Let's learn JSX Rendering</h4>
-           
             <p>Implement header for the table</p>
             <table>
                 <thead>

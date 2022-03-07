@@ -1,5 +1,5 @@
 import { createContext, Fragment, useContext, useEffect, useState } from "react"
-import { now, Reference } from "./helper"
+import { NotImplemented, notImplemented, now, Reference, SelectInput, sleep, TextInput } from "./helper"
 
 const lookups = {
     smile: '\u{1F600}',
@@ -8,32 +8,35 @@ const lookups = {
 }
 
 const smapleContext = createContext({
-    value: null, setValue: (value) => { },
-    resource: null, setResource: (resource) => { }
+    value: null, setValue: (value) => { }
 })
 
 // Challenge : 
 const Challenge = () => {
-    const [value, setValue] = useState<any>()
-    const [resource, setResource] = useState<any>()
-
     return <Fragment>
         <h4>Let's learn how to use hook to separate business logic from UI</h4>
-        <smapleContext.Provider value={{ value, setValue, resource, setResource }}>
-            <p>This is sample </p>
-            <Input />
-            <SmartDisplay />
-            <AnotherDisplay />
-            <hr />
-
-            <p>Challenge : convert data fetch logic into separate hook (requires internet connection)</p>
-            <Select />
-            <List />
-        </smapleContext.Provider>
+        <Sample />
+        <YourChallenge />
         <h4>Reference</h4>
         <Reference url="https://reactjs.org/docs/hooks-custom.html" />
     </Fragment>
 }
+
+
+const Sample = () => {
+    const [value, setValue] = useState<any>()
+
+    return <smapleContext.Provider value={{ value, setValue }}>
+        <p>This is sample </p>
+        <Input />
+        <SmartDisplay />
+        <AnotherDisplay />
+        <hr />
+
+
+    </smapleContext.Provider>
+}
+
 
 const Input = ({ }) => {
     const { setValue } = useContext(smapleContext)
@@ -88,42 +91,53 @@ const useSmartInput = (value) => {
     return text
 }
 //////////////////////////////////////////////////////////////////////////////
-const Select = () => {
-    const { setResource } = useContext(smapleContext)
 
-    return <div><label >Choose</label>
-        <select id="resource" onChange={(e) => setResource(e.target.value)}>
-            <option value="users">users</option>
-            <option value="todos">todos</option>
-            <option value="posts">posts</option>
-            <option value="comments">comment</option>
-        </select>
+const authContext = createContext({
+    authenticated: false, 
+    login: async(user) => { },
+    logout: ()=>{}
+})
+
+const YourChallenge = () => {
+    const [authenticated, setAuthenticated] = useState<any>()
+
+    const login = async(user) => {
+        await sleep(3000)
+        setAuthenticated(true)
+        sessionStorage.setItem('user',user)
+    }
+    const logout = ()=>setAuthenticated(false)
+
+    return (
+        <authContext.Provider value={{ authenticated, login, logout }}>
+            <p>Challenge :  fix useIdentity()</p>
+            {!authenticated ? <Login />:<Logout/>}
+            <Restricted />
+        </authContext.Provider>)
+}
+
+const Login = () => {
+    const { login } = useContext(authContext)
+    return <TextInput buttonLabel="login" handleValue={async(user) => await login(user)} />
+}
+
+const Logout = () => {
+    const { logout } = useContext(authContext)
+    return <button onClick={logout}>Logout</button>
+}
+
+const Restricted = ({ }) => {
+    const identity = useIdentity()
+    return <div>
+        <h4>Restricted Area</h4>
+        {identity.user==='admin' ?
+            <div>Congratualation!</div> :
+            <NotImplemented/>}
     </div>
 }
 
-
-// Challenge : convert data fetch to separate hook (useGetList)
-const List = () => {
-    const { resource } = useContext(smapleContext)
-    const [data, setData] = useState<any>();
-
-    useEffect(() => {
-        if (resource)
-            fetch(`https://jsonplaceholder.typicode.com/${resource}`)
-                .then((res) => res.json())
-                .then((data) => setData(data));
-    }, [resource]);
-
-    return (
-        <>
-            {data && <div>Item {data.length} fetched</div>}
-        </>
-    );
-};
-
-// Challenge : implement this and use it.
-const useGetList = (resource) => {
-    const [data, setData] = useState<any>();
-    return data
+// Challenge : this is not working. fix it. should return identity when authenticated, use useEffect
+const useIdentity = ():any => {
+    return {user:sessionStorage.getItem('user')}
 }
 export default { title: 'Hook', challenge: Challenge }
