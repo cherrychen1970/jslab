@@ -1,111 +1,179 @@
-import { createContext, Fragment, useContext, useState } from "react"
-import { FlexDiv, NotImplemented, Reference } from "./helper"
-
-const chatContext = createContext({
-    rooms: {},
-    createRoom: (roomName) => { },
-    joinRoom: (rommName, user) => { },
-    roomUsers: {}
-})
+import { createContext, Fragment, useContext, useEffect, useState } from "react"
+import { Div, SelectInput, TextInput } from "./helper"
 
 // Challenge : add header for the table
 const Challenge = () => {
-    const chat = useChatController()
+    const chatServer = useChatServerController()
 
     return (
         <Fragment>
-            <h4>Let's make chat</h4>
-            <chatContext.Provider value={chat}>
+            <h4 >Simple Chat</h4>
+            <chatServerContext.Provider value={chatServer}>
                 <CreateRoom />
-                <JoinRoom />
-                <ChatRooms />
-            </chatContext.Provider>
+                <Div flex fullWidth style={{ alignContent: 'space-between' }}>
+                    <UserPanel user="John" />
+                    <UserPanel user="Jane" />
+                </Div>
+            </chatServerContext.Provider>
         </Fragment>)
+}
+//////////////////////////////////////////////////////////////////////////////////////
+// Business Logic 
+const sampleData = {
+    room1: {
+        user: ['John', 'Jane'],
+        messages: [
+            {
+                sender: 'John',
+                content: 'Hello Jane'
+            },
+            {
+                sender:'Jane',
+                content:'Hello John'
+            }
+        ]
+    }
+}
+
+// This is server's context
+const chatServerContext = createContext({
+    rooms: {}, // dictionary of { roomName:{users,messages} } structure
+    createRoom: (roomName) => { },
+    joinRoom: (roomName, user) => { },
+    sendMessage: (roomName, user, message) => { }
+})
+
+// This is each user's context
+const chatContext = createContext({
+    user: String, // current user
+    room: {}, // current joined room => {name,messages}
+    joinRoom: (rommName) => { },
+    sendMessage: (message) => { }
+})
+
+// implement chat controller
+const useChatServerController = () => {
+    const [rooms, setRooms] = useState<any>(sampleData)
+
+    const createRoom = (roomName) => {
+        setRooms({ ...rooms, [roomName]: { users: [], messages: [] } })
+    }
+    const joinRoom = (roomName, user) => {
+        if (!rooms[roomName]) return
+        const { users, messages } = rooms[roomName]
+        const newMessage = { content: `${user} joined the room` }
+        setRooms({ ...rooms, [roomName]: { users: [...users, user], messages: [...messages, newMessage] } })
+    }
+
+    const sendMessage = (roomName, user, message) => {
+        if (!rooms[roomName]) return
+
+        const { [roomName]: room, ...rest } = rooms
+        const newMessage = { sender: user, content: message }
+        setRooms({ ...rest, [roomName]: { ...room, messages: [...room.messages, newMessage] } })
+    }
+    return { rooms, createRoom, joinRoom, sendMessage }
 }
 
 // implement chat controller
-const useChatController = () => {
-    const [rooms, setRooms] = useState<any>({})
+const useChatController = (user) => {
+    const { rooms, joinRoom: joinServerRoom, sendMessage: sendRoomMessage } = useContext(chatServerContext)
+    const [room, setRoom] = useState<any>(null)
+    const [roomName, setRoomName] = useState<any>('room1')
 
-    const createRoom = (roomName) => {
-        //rooms[roomName]={ users: [], messages: [] } ==> wrong!
-        setRooms({ ...rooms, [roomName]: { users: [], messages: [] } })
+    const joinRoom = (roomName) => {
+        setRoomName(roomName)
+        joinServerRoom(roomName, user)
     }
 
-    const joinRoom = (roomName, user) => {
-        const { users, messages } = rooms[roomName]
-        setRooms({ ...rooms, [roomName]: { users: [...users, user], messages: [...messages, `${user} has joined the room`] } })
+    const sendMessage = (message) => {
+        sendRoomMessage(roomName, user, message)
     }
 
-    const [roomUsers, setRoomUsers] = useState<any>()
+    useEffect(() => {
+        if (roomName && rooms && rooms[roomName]) {
+            let r = rooms[roomName]
+            setRoom({ name: roomName, messages: r.messages })
+        }
+    }, [rooms[roomName]])
 
-    return { rooms, createRoom, joinRoom, roomUsers }
+    return { user, joinRoom, room, sendMessage }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// UI
 const CreateRoom = () => {
-    const { createRoom } = useContext(chatContext)
-    const [roomName, setRoomName] = useState<any>()
-    return (<div>
-        <label>Create Room:</label>
-        <input type="text" onChange={(e) => setRoomName(e.target.value)} placeholder="roomname"/>
-        <button onClick={() => createRoom(roomName)} >Submit</button>
-    </div>)
+    const { createRoom } = useContext(chatServerContext)
+    return <TextInput label="Create Room" handleClick={createRoom} buttonLabel="Create" />
 }
 
-const JoinRoom = () => {
-    const { rooms, joinRoom } = useContext(chatContext)
-    const [roomName, setRoomName] = useState<any>()
-    const [user, setUser] = useState<any>()
-    return (<div>
-        <label>Join Room:</label>
-        <select id="resource" onChange={(e) => setRoomName(e.target.value)}>
-            {
-                Object.keys(rooms).map(roomName =>
-                    <option key={roomName}>{roomName}</option>)
-            }
-        </select>
-     
-        <input type="text" onChange={(e) => setUser(e.target.value)} placeholder="username"/>
-        <button onClick={() => joinRoom(roomName, user)} >Submit</button>
-    </div>)
+const UserPanel = ({ user }) => {
+    const chat = useChatController(user)
+
+    return <chatContext.Provider value={chat}>
+        <div style={{ width: '50%' }}>
+            <h4>This is {user} panel</h4>
+            <JoinRoom />
+            <ChatRoom />
+        </div>
+    </chatContext.Provider>
 }
 
-const ChatRooms = () => {
-    const { rooms } = useContext(chatContext)
-
-    return rooms && <FlexDiv fullWidth>
-        {Object.keys(rooms).map(roomName =>
-            <ChatRoom key={roomName} roomName={roomName} />)
-        }</FlexDiv>
+const JoinRoom = ({ }) => {
+    const { rooms } = useContext(chatServerContext)
+    const { joinRoom } = useContext(chatContext)
+    return <SelectInput label="Join Room" buttonLabel="Join" choices={Object.keys(rooms)} handleClick={joinRoom} />
 }
 
-const ChatRoom = ({ roomName }) => {
-    const { rooms } = useContext(chatContext)
-    const room = rooms[roomName]
-    const messages = room.messages
-    const users = room.users
+const ChatRoom = ({ }) => {
+    const { room }: any = useContext(chatContext)
 
-    return <div key={roomName} style={{ width: 256, border: 'solid 1px #cccccc', margin: '1em', padding: '1em' }}>
-        <h4>ChatRoom: {roomName}</h4>
-        <h4>Messages:</h4>
-        <ul>
-            {
-                messages && messages.map((message, index) =>
-                    <li key={index}>
-                        {message}
-                    </li>)
-            }
-        </ul>
-        <h4>Users:</h4>
-        <ul>
-            {
-                users && users.map((user, index) =>
-                    <li key={index}>
-                        {user}
-                    </li>)
-            }
-        </ul>
-    </div>
+    return room && <Div outline style={{ width: 300, minHeight: 400, padding: '1em' }} >
+        <h4 style={{ margin: 0 }}>Room: {room.name} </h4>
+        <Div>
+            <Messages messages={room.messages} />
+            <MessageInput />
+        </Div>
+    </Div>
 }
+
+const Messages = ({ messages = null }: any) => {
+    return <ul style={{
+        border: 'solid 1px #cccccc',
+        padding: '1em',
+    }}>
+        {
+            <>
+                {messages && messages.map((message, index) =>
+                    <Message key={index} message={message} />
+                )}
+            </>
+        }
+    </ul>
+}
+
+const Message = ({ message }) => {
+    const { user }: any = useContext(chatContext)
+
+    // is it general notification?
+    if (!message.sender)
+        return <li><span>{message.content}</span></li>
+    // is it my message?
+    else if (message.sender === user)
+        return <li style={{ textAlign: 'right' }}><BubbleContent content={message.content} ></BubbleContent></li>
+    else
+        return <li><span> <h6 style={{ margin: 0 }} >{message.sender}</h6>
+            <BubbleContent content={message.content} /></span></li>
+}
+
+const MessageInput = () => {
+    const { sendMessage }: any = useContext(chatContext)
+    return <TextInput handleClick={sendMessage} />
+}
+
+const BubbleContent = ({ content }) =>
+    <span style={{ padding: '0.6em', margin: '0.3em', border: 'solid 1px #cccccc', display: 'inline-block', borderRadius: '1em' }}>
+        {content}
+    </span>
 
 export default { title: 'Chat', challenge: Challenge }
